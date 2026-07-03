@@ -55,11 +55,13 @@ def bracket(chat_id):
 
 📊 SEMI FINAL
 
-1️⃣ {data['d1']}
+1️⃣ 
+{data['d1']}
 VS
 {data['d2']}
 
-2️⃣ {data['d3']}
+2️⃣ 
+{data['d3']}
 VS
 {data['d4']}
 
