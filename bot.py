@@ -75,334 +75,127 @@ VS
 
 ━━━━━━━━━━
 """
-    
-    @bot.message_handler(commands=['pot'])
+
+@bot.message_handler(commands=['pot'])
 def pot(message):
+    bot.send_message(message.chat.id, bracket(message.chat.id))
 
-    bot.send_message(
 
-        message.chat.id,
-
-        bracket(message.chat.id)
-
-    )
-    @bot.message_handler(commands=['d1'])
+@bot.message_handler(commands=['d1'])
 def d1(message):
-
     try:
-
         data = get(message.chat.id)
-
         data["d1"] = message.text.split(maxsplit=1)[1]
-
         save()
-
-        bot.reply_to(
-
-            message,
-
-            "✅ D1 berhasil"
-
-        )
-
+        bot.reply_to(message,"✅ D1 berhasil")
     except:
+        bot.reply_to(message,"/d1 @user")
 
-        bot.reply_to(
 
-            message,
-
-            "/d1 @user"
-
-        )
-        @bot.message_handler(commands=['d2'])
+@bot.message_handler(commands=['d2'])
 def d2(message):
-
     try:
-
         data = get(message.chat.id)
-
         data["d2"] = message.text.split(maxsplit=1)[1]
-
         save()
-
-        bot.reply_to(
-
-            message,
-
-            "✅ D2 berhasil"
-
-        )
-
+        bot.reply_to(message,"✅ D2 berhasil")
     except:
+        bot.reply_to(message,"/d2 @user")
 
-        bot.reply_to(
 
-            message,
-
-            "/d2 @user"
-
-        )
-        @bot.message_handler(commands=['d3'])
+@bot.message_handler(commands=['d3'])
 def d3(message):
-
     try:
-
         data = get(message.chat.id)
-
         data["d3"] = message.text.split(maxsplit=1)[1]
-
         save()
-
-        bot.reply_to(
-
-            message,
-
-            "✅ D3 berhasil"
-
-        )
-
+        bot.reply_to(message,"✅ D3 berhasil")
     except:
+        bot.reply_to(message,"/d3 @user")
 
-        bot.reply_to(
 
-            message,
-
-            "/d3 @user"
-
-        )
-        @bot.message_handler(commands=['d4'])
+@bot.message_handler(commands=['d4'])
 def d4(message):
-
     try:
-
         data = get(message.chat.id)
-
         data["d4"] = message.text.split(maxsplit=1)[1]
-
         save()
-
-        bot.reply_to(
-
-            message,
-
-            "✅ D4 berhasil"
-
-        )
-
+        bot.reply_to(message,"✅ D4 berhasil")
     except:
+        bot.reply_to(message,"/d4 @user")
 
-        bot.reply_to(
 
-            message,
-
-            "/d4 @user"
-
-        )
-        @bot.message_handler(commands=['final'])
+@bot.message_handler(commands=['final'])
 def final(message):
-
     try:
-
         data = get(message.chat.id)
-
         args = message.text.split()
-
         data["final1"] = args[1]
-
         data["final2"] = args[2]
-
         save()
-
-        bot.reply_to(
-
-            message,
-
-            "🔥 Final berhasil"
-
-        )
-
+        bot.reply_to(message,"🔥 Final berhasil")
     except:
+        bot.reply_to(message,"/final @user1 @user2")
 
-        bot.reply_to(
 
-            message,
-
-            "/final @user1 @user2"
-
-        )
-        @bot.message_handler(commands=['winner'])
+@bot.message_handler(commands=['winner'])
 def winner(message):
-
     try:
-
         data = get(message.chat.id)
-
         data["winner"] = message.text.split()[1]
-
         save()
-
-        bot.reply_to(
-
-            message,
-
-            "🏆 Pemenang disimpan"
-
-        )
-
+        bot.reply_to(message,"🏆 Winner disimpan")
     except:
+        bot.reply_to(message,"/winner @user")
 
-        bot.reply_to(
-
-            message,
-
-            "/winner @user"
-
-        )
-        @bot.message_handler(commands=['reset'])
+@bot.message_handler(commands=['reset'])
 def reset(message):
-
     chat_id = str(message.chat.id)
 
     groups[chat_id] = {
-
         "d1":"-",
-
         "d2":"-",
-
         "d3":"-",
-
         "d4":"-",
-
         "final1":"?",
-
         "final2":"?",
-
         "winner":"?",
-
         "pay_photo":None,
-
         "welcome":"🎉 Selamat datang di DOYZIN STORE"
-
     }
 
     save()
+    bot.reply_to(message,"♻️ Reset berhasil")
 
-    bot.reply_to(
 
-        message,
+@bot.message_handler(commands=['setwelcome'])
+def setwelcome(message):
+    text = message.text.replace("/setwelcome","").strip()
+    if text:
+        data = get(message.chat.id)
+        data["welcome"] = text
+        save()
+        bot.reply_to(message,"✅ Welcome diubah")
 
-        "♻️ Bracket direset"
 
-    )
-    @bot.message_handler(commands=['setpay'])
+@bot.message_handler(commands=['setpay'])
 def setpay(message):
+    if message.reply_to_message and message.reply_to_message.photo:
+        data = get(message.chat.id)
+        data["pay_photo"] = message.reply_to_message.photo[-1].file_id
+        save()
+        bot.reply_to(message,"✅ QR disimpan")
 
-    if message.reply_to_message:
 
-        if message.reply_to_message.photo:
-
-            data = get(message.chat.id)
-
-            data["pay_photo"] = message.reply_to_message.photo[-1].file_id
-
-            save()
-
-            bot.reply_to(
-
-                message,
-
-                "✅ QR tersimpan"
-
-            )
-
-            return
-
-    bot.reply_to(
-
-        message,
-
-        "Reply foto lalu /setpay"
-
-    )
-    @bot.message_handler(
-func=lambda m:m.text and m.text.lower()=="pay")
+@bot.message_handler(func=lambda m:m.text and m.text.lower()=="pay")
 def pay(message):
-
     data = get(message.chat.id)
 
     if data["pay_photo"]:
-
-        bot.send_photo(
-
-            message.chat.id,
-
-            data["pay_photo"],
-
-            caption="💳 PAYMENT DOYZIN"
-
-        )
-
+        bot.send_photo(message.chat.id,data["pay_photo"],caption="💳 PAYMENT DOYZIN")
     else:
+        bot.reply_to(message,"QR belum diatur")
 
-        bot.reply_to(
-
-            message,
-
-            "QR belum diatur"
-
-        )
-        @bot.message_handler(commands=['setwelcome'])
-def setwelcome(message):
-
-    text = message.text.replace(
-
-        "/setwelcome",
-
-        ""
-
-    ).strip()
-
-    if text:
-
-        data = get(message.chat.id)
-
-        data["welcome"] = text
-
-        save()
-
-        bot.reply_to(
-
-            message,
-
-            "✅ Welcome berhasil"
-
-        )
-        @bot.message_handler(commands=['setwelcome'])
-def setwelcome(message):
-
-    text = message.text.replace(
-
-        "/setwelcome",
-
-        ""
-
-    ).strip()
-
-    if text:
-
-        data = get(message.chat.id)
-
-        data["welcome"] = text
-
-        save()
-
-        bot.reply_to(
-
-            message,
-
-            "✅ Welcome berhasil"
-
-        )
-        print("DOYZIN POT ONLINE")
+print("DOYZIN POT ONLINE")
 
 bot.infinity_polling()
