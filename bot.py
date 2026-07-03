@@ -1,284 +1,382 @@
 import os
+import json
 import telebot
 
 TOKEN = os.getenv("TOKEN")
 
 bot = telebot.TeleBot(TOKEN)
 
-d1 = "-"
-d2 = "-"
-d3 = "-"
-d4 = "-"
+DATA_FILE = "data.json"
+def load():
 
-final1 = "?"
-final2 = "?"
+    try:
 
-winner = "?"
+        with open(DATA_FILE,"r",encoding="utf-8") as f:
 
-pay_photo = None
+            return json.load(f)
 
-welcome_text = "🎉 Selamat datang di DOYZIN STORE"
+    except:
+
+        return {}
 
 
-def bracket():
+def save():
+
+    with open(DATA_FILE,"w",encoding="utf-8") as f:
+
+        json.dump(
+
+            groups,
+
+            f,
+
+            indent=4,
+
+            ensure_ascii=False
+
+        )
+
+
+groups = load()
+def get(chat_id):
+
+    chat_id = str(chat_id)
+
+    if chat_id not in groups:
+
+        groups[chat_id] = {
+
+            "d1":"-",
+
+            "d2":"-",
+
+            "d3":"-",
+
+            "d4":"-",
+
+            "final1":"?",
+
+            "final2":"?",
+
+            "winner":"?",
+
+            "pay_photo":None,
+
+            "welcome":"🎉 Selamat datang di DOYZIN STORE"
+
+        }
+
+        save()
+
+    return groups[chat_id]
+    def bracket(chat_id):
+
+    data = get(chat_id)
 
     return f"""
-POTDOYZIN
 
 🏆 DOYZIN POT 🏆
 
 ━━━━━━━━━━
 
-📊 BRACKET TURNAMEN
+📊 BRACKET
 
 🔴 SEMI FINAL
 
-1️⃣ 
-{d1}
-VS
-{d2}
+1️⃣
 
-2️⃣ 
-{d3}
+{data['d1']}
+
 VS
-{d4}
+
+{data['d2']}
+
+
+2️⃣
+
+{data['d3']}
+
+VS
+
+{data['d4']}
+
 
 🔥 FINAL
 
-🏆 {final1} VS {final2}
+🏆 {data['final1']} VS {data['final2']}
 
 ━━━━━━━━━━
 
 🥇 PEMENANG
 
-👑 {winner}
+👑 {data['winner']}
 
 ━━━━━━━━━━
+
 """
-
-
-@bot.message_handler(commands=['start'])
-def start(message):
-
-    bot.reply_to(
-        message,
-        "🏆 DOYZIN POT PREMIUM AKTIF"
-    )
-
-
-@bot.message_handler(commands=['help'])
-def help(message):
-
-    txt = """
-/pot
-
-/d1 @user
-/d2 @user
-/d3 @user
-/d4 @user
-
-/aoa @user1 @user2
-
-/final @user
-
-/reset
-
-/setpay
-
-pay
-
-/setwelcome pesan
-"""
-
-    bot.reply_to(message, txt)
-
-
-@bot.message_handler(commands=['pot'])
+    @bot.message_handler(commands=['pot'])
 def pot(message):
 
     bot.send_message(
+
         message.chat.id,
-        bracket()
+
+        bracket(message.chat.id)
+
     )
-
-
-@bot.message_handler(commands=['d1'])
-def cmd_d1(message):
-
-    global d1
+    @bot.message_handler(commands=['d1'])
+def d1(message):
 
     try:
 
-        d1 = message.text.split(maxsplit=1)[1]
+        data = get(message.chat.id)
 
-        bot.reply_to(message, "✅ D1 berhasil")
+        data["d1"] = message.text.split(maxsplit=1)[1]
 
-    except:
-
-        bot.reply_to(message, "/d1 @user")
-
-
-@bot.message_handler(commands=['d2'])
-def cmd_d2(message):
-
-    global d2
-
-    try:
-
-        d2 = message.text.split(maxsplit=1)[1]
-
-        bot.reply_to(message, "✅ D2 berhasil")
-
-    except:
-
-        bot.reply_to(message, "/d2 @user")
-
-
-@bot.message_handler(commands=['d3'])
-def cmd_d3(message):
-
-    global d3
-
-    try:
-
-        d3 = message.text.split(maxsplit=1)[1]
-
-        bot.reply_to(message, "✅ D3 berhasil")
-
-    except:
-
-        bot.reply_to(message, "/d3 @user")
-
-
-@bot.message_handler(commands=['d4'])
-def cmd_d4(message):
-
-    global d4
-
-    try:
-
-        d4 = message.text.split(maxsplit=1)[1]
-
-        bot.reply_to(message, "✅ D4 berhasil")
-
-    except:
-
-        bot.reply_to(message, "/d4 @user")
-
-
-@bot.message_handler(commands=['aoa'])
-def aoa(message):
-
-    global final1
-    global final2
-
-    try:
-
-        data = message.text.split()
-
-        final1 = data[1]
-        final2 = data[2]
+        save()
 
         bot.reply_to(
+
             message,
-            "🔥 Final berhasil diatur"
+
+            "✅ D1 berhasil"
+
         )
 
     except:
 
         bot.reply_to(
+
             message,
-            "/aoa @user1 @user2"
+
+            "/d1 @user"
+
+        )
+        @bot.message_handler(commands=['d2'])
+def d2(message):
+
+    try:
+
+        data = get(message.chat.id)
+
+        data["d2"] = message.text.split(maxsplit=1)[1]
+
+        save()
+
+        bot.reply_to(
+
+            message,
+
+            "✅ D2 berhasil"
+
         )
 
+    except:
 
-@bot.message_handler(commands=['final'])
+        bot.reply_to(
+
+            message,
+
+            "/d2 @user"
+
+        )
+        @bot.message_handler(commands=['d3'])
+def d3(message):
+
+    try:
+
+        data = get(message.chat.id)
+
+        data["d3"] = message.text.split(maxsplit=1)[1]
+
+        save()
+
+        bot.reply_to(
+
+            message,
+
+            "✅ D3 berhasil"
+
+        )
+
+    except:
+
+        bot.reply_to(
+
+            message,
+
+            "/d3 @user"
+
+        )
+        @bot.message_handler(commands=['d4'])
+def d4(message):
+
+    try:
+
+        data = get(message.chat.id)
+
+        data["d4"] = message.text.split(maxsplit=1)[1]
+
+        save()
+
+        bot.reply_to(
+
+            message,
+
+            "✅ D4 berhasil"
+
+        )
+
+    except:
+
+        bot.reply_to(
+
+            message,
+
+            "/d4 @user"
+
+        )
+        @bot.message_handler(commands=['final'])
 def final(message):
 
-    global winner
-
     try:
 
-        winner = message.text.split()[1]
+        data = get(message.chat.id)
+
+        args = message.text.split()
+
+        data["final1"] = args[1]
+
+        data["final2"] = args[2]
+
+        save()
 
         bot.reply_to(
+
             message,
-            "🏆 Pemenang disimpan"
+
+            "🔥 Final berhasil"
+
         )
 
     except:
 
         bot.reply_to(
+
             message,
-            "/final @user"
+
+            "/final @user1 @user2"
+
+        )
+        @bot.message_handler(commands=['winner'])
+def winner(message):
+
+    try:
+
+        data = get(message.chat.id)
+
+        data["winner"] = message.text.split()[1]
+
+        save()
+
+        bot.reply_to(
+
+            message,
+
+            "🏆 Pemenang disimpan"
+
         )
 
+    except:
 
-@bot.message_handler(commands=['reset'])
+        bot.reply_to(
+
+            message,
+
+            "/winner @user"
+
+        )
+        @bot.message_handler(commands=['reset'])
 def reset(message):
 
-    global d1
-    global d2
-    global d3
-    global d4
+    chat_id = str(message.chat.id)
 
-    global final1
-    global final2
+    groups[chat_id] = {
 
-    global winner
+        "d1":"-",
 
-    d1="-"
-    d2="-"
-    d3="-"
-    d4="-"
+        "d2":"-",
 
-    final1="?"
-    final2="?"
+        "d3":"-",
 
-    winner="?"
+        "d4":"-",
+
+        "final1":"?",
+
+        "final2":"?",
+
+        "winner":"?",
+
+        "pay_photo":None,
+
+        "welcome":"🎉 Selamat datang di DOYZIN STORE"
+
+    }
+
+    save()
 
     bot.reply_to(
+
         message,
+
         "♻️ Bracket direset"
+
     )
-
-
-@bot.message_handler(commands=['setpay'])
+    @bot.message_handler(commands=['setpay'])
 def setpay(message):
-
-    global pay_photo
 
     if message.reply_to_message:
 
         if message.reply_to_message.photo:
 
-            pay_photo = message.reply_to_message.photo[-1].file_id
+            data = get(message.chat.id)
+
+            data["pay_photo"] = message.reply_to_message.photo[-1].file_id
+
+            save()
 
             bot.reply_to(
+
                 message,
-                "✅ QR pembayaran tersimpan"
+
+                "✅ QR tersimpan"
+
             )
 
             return
 
     bot.reply_to(
+
         message,
-        "Reply foto QR lalu ketik /setpay"
+
+        "Reply foto lalu /setpay"
+
     )
-
-
-@bot.message_handler(func=lambda m: m.text and m.text.lower()=="pay")
+    @bot.message_handler(
+func=lambda m:m.text and m.text.lower()=="pay")
 def pay(message):
 
-    if pay_photo:
+    data = get(message.chat.id)
+
+    if data["pay_photo"]:
 
         bot.send_photo(
 
             message.chat.id,
 
-            pay_photo,
+            data["pay_photo"],
 
-            caption="💳 QR PAYMENT DOYZIN"
+            caption="💳 PAYMENT DOYZIN"
 
         )
 
@@ -291,12 +389,8 @@ def pay(message):
             "QR belum diatur"
 
         )
-
-
-@bot.message_handler(commands=['setwelcome'])
+        @bot.message_handler(commands=['setwelcome'])
 def setwelcome(message):
-
-    global welcome_text
 
     text = message.text.replace(
 
@@ -308,41 +402,45 @@ def setwelcome(message):
 
     if text:
 
-        welcome_text = text
+        data = get(message.chat.id)
+
+        data["welcome"] = text
+
+        save()
 
         bot.reply_to(
 
             message,
 
-            "✅ Welcome berhasil diubah"
+            "✅ Welcome berhasil"
 
         )
+        @bot.message_handler(commands=['setwelcome'])
+def setwelcome(message):
 
-    else:
+    text = message.text.replace(
+
+        "/setwelcome",
+
+        ""
+
+    ).strip()
+
+    if text:
+
+        data = get(message.chat.id)
+
+        data["welcome"] = text
+
+        save()
 
         bot.reply_to(
 
             message,
 
-            "/setwelcome pesan"
+            "✅ Welcome berhasil"
 
         )
-
-
-@bot.message_handler(content_types=['new_chat_members'])
-def welcome(message):
-
-    for user in message.new_chat_members:
-
-        bot.send_message(
-
-            message.chat.id,
-
-            f"👋 {user.first_name}\n\n{welcome_text}"
-
-        )
-
-
-print("DOYZIN POT PREMIUM ONLINE")
+        print("DOYZIN POT ONLINE")
 
 bot.infinity_polling()
