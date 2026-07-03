@@ -94,8 +94,7 @@ VS
 
 ━━━━━━━━━━
 """
-
-"""
+    
     @bot.message_handler(commands=['pot'])
 def pot(message):
 
