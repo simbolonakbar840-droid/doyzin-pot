@@ -62,22 +62,62 @@ def get(chat_id):
 
             "pay_photo":None,
 
+            def get(chat_id):
+
+    chat_id = str(chat_id)
+
+    if chat_id not in groups:
+
+        groups[chat_id] = {
+
+            "d1":"-",
+            "d2":"-",
+            "d3":"-",
+            "d4":"-",
+            "final1":"?",
+            "final2":"?",
+            "winner":"?",
+            "pay_photo":None,
             "welcome":"🎉 Selamat datang di DOYZIN STORE"
 
         }
 
-        save()
-
     return groups[chat_id]
-    def bracket(chat_id):
+
+
+def bracket(chat_id):
 
     data = get(chat_id)
 
     return f"""
-
 🏆 DOYZIN POT 🏆
 
 ━━━━━━━━━━
+
+📊 BRACKET TURNAMEN
+
+🔴 SEMI FINAL
+
+1️⃣ {data['d1']}
+VS
+{data['d2']}
+
+2️⃣ {data['d3']}
+VS
+{data['d4']}
+
+🔥 FINAL
+
+🏆 {data['final1']} VS {data['final2']}
+
+━━━━━━━━━━
+
+🥇 PEMENANG
+
+👑 {data['winner']}
+
+━━━━━━━━━━
+"""
 
 📊 BRACKET
 
