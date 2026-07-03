@@ -178,7 +178,7 @@ def welcome(message):
 
         bot.send_message(
             message.chat.id,
-            f"👋 {user.first_name}\n\n{data.get('welcome','Selamat datang!')}"
+            data.get("welcome", "")
         )
 
 @bot.message_handler(commands=['setwelcome'])
@@ -239,6 +239,15 @@ def pay(message):
     else:
 
         bot.reply_to(message, "QR belum diatur")
+
+@bot.message_handler(commands=['rules'])
+def rules(message):
+
+    bot.send_message(
+        message.chat.id,
+        "📜 RULES BY FT DOYZIN: https://t.me/rulesdoyzin"
+    )
+
 
 print("DOYZIN POT ONLINE")
 
