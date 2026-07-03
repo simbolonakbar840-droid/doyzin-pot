@@ -7,36 +7,19 @@ TOKEN = os.getenv("TOKEN")
 bot = telebot.TeleBot(TOKEN)
 
 DATA_FILE = "data.json"
+
 def load():
-
     try:
-
         with open(DATA_FILE,"r",encoding="utf-8") as f:
-
             return json.load(f)
-
     except:
-
         return {}
 
-
 def save():
-
     with open(DATA_FILE,"w",encoding="utf-8") as f:
+        json.dump(groups,f,indent=4,ensure_ascii=False)
 
-        json.dump(
-
-            groups,
-
-            f,
-
-            indent=4,
-
-            ensure_ascii=False
-
-        )
-
-groups = {}
+groups = load()
 
 def get(chat_id):
 
