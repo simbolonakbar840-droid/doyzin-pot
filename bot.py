@@ -36,7 +36,6 @@ def save():
 
         )
 
-
 groups = {}
 
 def get(chat_id):
@@ -71,9 +70,7 @@ def bracket(chat_id):
 
 ━━━━━━━━━━
 
-📊 BRACKET TURNAMEN
-
-🔴 SEMI FINAL
+📊 SEMI FINAL
 
 1️⃣ {data['d1']}
 VS
