@@ -37,7 +37,8 @@ def save():
         )
 
 
-groups = load()
+groups = {}
+
 def get(chat_id):
 
     chat_id = str(chat_id)
