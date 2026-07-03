@@ -33,11 +33,13 @@ POTDOYZIN
 
 🔴 SEMI FINAL
 
-1️⃣ {d1}
+1️⃣ 
+{d1}
 VS
 {d2}
 
-2️⃣ {d3}
+2️⃣ 
+{d3}
 VS
 {d4}
 
