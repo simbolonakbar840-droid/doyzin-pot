@@ -169,34 +169,76 @@ def reset(message):
     save()
     bot.reply_to(message,"♻️ Reset berhasil")
 
+@bot.message_handler(content_types=['new_chat_members'])
+def welcome(message):
+
+    data = get(message.chat.id)
+
+    for user in message.new_chat_members:
+
+        bot.send_message(
+            message.chat.id,
+            f"👋 {user.first_name}\n\n{data.get('welcome','Selamat datang!')}"
+        )
 
 @bot.message_handler(commands=['setwelcome'])
 def setwelcome(message):
+
     text = message.text.replace("/setwelcome","").strip()
+
     if text:
+
         data = get(message.chat.id)
+
         data["welcome"] = text
+
         save()
-        bot.reply_to(message,"✅ Welcome diubah")
+
+        bot.reply_to(message,"✅ Welcome disimpan")
+
+    else:
+
+        bot.reply_to(message,"/setwelcome pesan")
 
 
 @bot.message_handler(commands=['setpay'])
 def setpay(message):
+
     if message.reply_to_message and message.reply_to_message.photo:
+
         data = get(message.chat.id)
+
         data["pay_photo"] = message.reply_to_message.photo[-1].file_id
+
         save()
-        bot.reply_to(message,"✅ QR disimpan")
 
+        bot.reply_to(message, "✅ QR tersimpan")
 
-@bot.message_handler(func=lambda m:m.text and m.text.lower()=="pay")
+    else:
+
+        bot.reply_to(message, "Reply foto QR lalu /setpay")
+
+@bot.message_handler(commands=['pay'])
+@bot.message_handler(func=lambda m: m.text and m.text.lower() == "pay")
 def pay(message):
+
     data = get(message.chat.id)
 
-    if data["pay_photo"]:
-        bot.send_photo(message.chat.id,data["pay_photo"],caption="💳 PAYMENT DOYZIN")
+    if data.get("pay_photo"):
+
+        bot.send_photo(
+
+            message.chat.id,
+
+            data["pay_photo"],
+
+            caption="💳 PAYMENT DOYZIN"
+
+        )
+
     else:
-        bot.reply_to(message,"QR belum diatur")
+
+        bot.reply_to(message, "QR belum diatur")
 
 print("DOYZIN POT ONLINE")
 
