@@ -251,57 +251,103 @@ def setrules(message):
 
     global global_rules
 
-    text = message.text.replace("/setrules","").strip()
+    if message.reply_to_message:
 
-    if text:
+        if message.reply_to_message.text:
 
-        global_rules = text
+            global_rules = message.reply_to_message.text
 
-        bot.reply_to(
-            message,
-            "✅ Rules global berhasil disimpan"
-        )
+            bot.reply_to(
+                message,
+                "✅ Rules berhasil disimpan"
+            )
+
+        else:
+
+            bot.reply_to(
+                message,
+                "Reply pesan teks rules lalu /setrules"
+            )
 
     else:
 
         bot.reply_to(
             message,
-            "/setrules isi rules"
+            "Reply pesan rules lalu /setrules"
         )
 
 @bot.message_handler(commands=['rules'])
 def rules(message):
 
-    bot.send_message(
+    if global_rules:
 
-        message.chat.id,
+        bot.send_message(
 
-        global_rules
+            message.chat.id,
 
-    )
+            global_rules
+
+        )
+
+    else:
+
+        bot.reply_to(
+
+            message,
+
+            "Rules belum diatur"
+
+        )
 
 @bot.message_handler(commands=['setdone'])
 def setdone(message):
 
     global global_done
 
-    text = message.text.replace(
+    if message.reply_to_message:
 
-        "/setdone",
+        if message.reply_to_message.text:
 
-        ""
+            global_done = message.reply_to_message.text
 
-    ).strip()
+            bot.reply_to(
 
-    if text:
+                message,
 
-        global_done = text
+                "✅ Done berhasil disimpan"
+
+            )
+
+        else:
+
+            bot.reply_to(
+
+                message,
+
+                "Reply pesan teks lalu /setdone"
+
+            )
+
+    else:
 
         bot.reply_to(
 
             message,
 
-            "✅ Done global berhasil diubah"
+            "Reply pesan done lalu /setdone"
+
+        )
+
+@bot.message_handler(commands=['done'])
+def done(message):
+
+    if global_done:
+
+        bot.send_message(
+
+            message.chat.id,
+
+            global_done
 
         )
 
@@ -311,20 +357,9 @@ def setdone(message):
 
             message,
 
-            "/setdone isi pesan"
+            "Done belum diatur"
 
         )
-
-@bot.message_handler(commands=['done'])
-def done(message):
-
-    bot.send_message(
-
-        message.chat.id,
-
-        global_done
-
-    )
 
 
 
