@@ -21,6 +21,11 @@ def save():
 
 groups = load()
 
+global_rules = ""
+
+global_done = ""
+
+
 def get(chat_id):
 
     chat_id = str(chat_id)
@@ -29,17 +34,17 @@ def get(chat_id):
 
         groups[chat_id] = {
 
-            "d1":"-",
-            "d2":"-",
-            "d3":"-",
-            "d4":"-",
-            "final1":"?",
-            "final2":"?",
-            "winner":"?",
-            "pay_photo":None,
-            "welcome":"🎉 Selamat datang di DOYZIN STORE"
+    "d1":"-",
+    "d2":"-",
+    "d3":"-",
+    "d4":"-",
+    "final1":"?",
+    "final2":"?",
+    "winner":"?",
+    "pay_photo":None,
+    "welcome":"🎉 Selamat datang di DOYZIN STORE",
 
-        }
+}
 
     return groups[chat_id]
 
@@ -200,25 +205,133 @@ def setwelcome(message):
 
         bot.reply_to(message,"/setwelcome pesan")
 
+@bot.message_handler(commands=['start'])
+def start(message):
 
-@bot.message_handler(commands=['pay'])
-def pay(message):
-    with open("qr.png", "rb") as qr:
-        bot.send_photo(
-            message.chat.id,
-            qr,
-            caption="💳 PAYMENT QRIS DOYZIN"
+    bot.reply_to(
+        message,
+        """🏆 DOYZIN POT AKTIF
+
+Gunakan:
+/pot
+/help
+/rules
+/pay"""
+    )
+
+@bot.message_handler(commands=['help'])
+def help(message):
+
+    bot.reply_to(
+        message,
+        """
+🏆 DOYZIN POT
+
+/pot
+/d1
+/d2
+/d3
+/d4
+
+/final
+/winner
+/reset
+
+/setpay
+pay
+
+/setwelcome
+/setrules
+/rules
+"""
+    )
+
+@bot.message_handler(commands=['setrules'])
+def setrules(message):
+
+    global global_rules
+
+    text = message.text.replace("/setrules","").strip()
+
+    if text:
+
+        global_rules = text
+
+        bot.reply_to(
+            message,
+            "✅ Rules global berhasil disimpan"
+        )
+
+    else:
+
+        bot.reply_to(
+            message,
+            "/setrules isi rules"
         )
 
 @bot.message_handler(commands=['rules'])
 def rules(message):
 
     bot.send_message(
+
         message.chat.id,
-        "📜 RULES BY FT DOYZIN: https://t.me/rulesdoyzin"
+
+        global_rules
+
     )
+
+@bot.message_handler(commands=['setdone'])
+def setdone(message):
+
+    global global_done
+
+    text = message.text.replace(
+
+        "/setdone",
+
+        ""
+
+    ).strip()
+
+    if text:
+
+        global_done = text
+
+        bot.reply_to(
+
+            message,
+
+            "✅ Done global berhasil diubah"
+
+        )
+
+    else:
+
+        bot.reply_to(
+
+            message,
+
+            "/setdone isi pesan"
+
+        )
+
+@bot.message_handler(commands=['done'])
+def done(message):
+
+    bot.send_message(
+
+        message.chat.id,
+
+        global_done
+
+    )
+
 
 
 print("DOYZIN POT ONLINE")
 
 bot.infinity_polling()
+
+
+
+
