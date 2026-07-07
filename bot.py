@@ -21,9 +21,11 @@ def save():
 
 groups = load()
 
-global_rules = ""
+global_rules_chat = None
+global_rules_msg = None
 
-global_done = ""
+global_done_chat = None
+global_done_msg = None
 
 
 def get(chat_id):
@@ -249,117 +251,66 @@ pay
 @bot.message_handler(commands=['setrules'])
 def setrules(message):
 
-    global global_rules
+    global global_rules_chat
+    global global_rules_msg
 
     if message.reply_to_message:
 
-        if message.reply_to_message.text:
+        global_rules_chat = message.chat.id
+        global_rules_msg = message.reply_to_message.message_id
 
-            global_rules = message.reply_to_message.text
-
-            bot.reply_to(
-                message,
-                "✅ Rules berhasil disimpan"
-            )
-
-        else:
-
-            bot.reply_to(
-                message,
-                "Reply pesan teks rules lalu /setrules"
-            )
+        bot.reply_to(message, "✅ Rules berhasil disimpan")
 
     else:
 
-        bot.reply_to(
-            message,
-            "Reply pesan rules lalu /setrules"
-        )
+        bot.reply_to(message, "Reply pesan rules lalu /setrules")
 
 @bot.message_handler(commands=['rules'])
 def rules(message):
 
-    if global_rules:
+    if global_rules_msg:
 
-        bot.send_message(
-
+        bot.copy_message(
             message.chat.id,
-
-            global_rules
-
+            global_rules_chat,
+            global_rules_msg
         )
 
     else:
 
-        bot.reply_to(
-
-            message,
-
-            "Rules belum diatur"
-
-        )
+        bot.reply_to(message, "Rules belum diatur")
 
 @bot.message_handler(commands=['setdone'])
 def setdone(message):
 
-    global global_done
+    global global_done_chat
+    global global_done_msg
 
     if message.reply_to_message:
 
-        if message.reply_to_message.text:
+        global_done_chat = message.chat.id
+        global_done_msg = message.reply_to_message.message_id
 
-            global_done = message.reply_to_message.text
-
-            bot.reply_to(
-
-                message,
-
-                "✅ Done berhasil disimpan"
-
-            )
-
-        else:
-
-            bot.reply_to(
-
-                message,
-
-                "Reply pesan teks lalu /setdone"
-
-            )
+        bot.reply_to(message, "✅ Done berhasil disimpan")
 
     else:
 
-        bot.reply_to(
-
-            message,
-
-            "Reply pesan done lalu /setdone"
-
-        )
+        bot.reply_to(message, "Reply pesan done lalu /setdone")
 
 @bot.message_handler(commands=['done'])
 def done(message):
 
-    if global_done:
+    if global_done_msg:
 
-        bot.send_message(
-
+        bot.copy_message(
             message.chat.id,
-
-            global_done
-
+            global_done_chat,
+            global_done_msg
         )
 
     else:
 
-        bot.reply_to(
-
-            message,
-
-            "Done belum diatur"
-
-        )
+        bot.reply_to(message, "Done belum diatur")
 
 
 
